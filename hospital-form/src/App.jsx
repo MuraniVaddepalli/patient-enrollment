@@ -312,7 +312,7 @@ const inputProps = (name) => ({
 
             <div className="field-group">
               <label htmlFor="pincode">Pin Code</label>
-              <input id="pincode" placeholder="000000" {...inputProps("pincode")} />
+              <input id="pincode" maxLength='6' placeholder="000000" {...inputProps("pincode")} />
             </div>
           </div>
         </section>
