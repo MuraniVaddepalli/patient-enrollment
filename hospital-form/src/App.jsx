@@ -114,6 +114,11 @@ const handleChange = (e) => {
       newErrors.email = "Invalid email address";
     }
 
+
+    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) {
+  newErrors.pincode = "Pincode must be 6 digits";
+}
+
     // Mobile validation (10 digits)
 if (!/^\d{10}$/.test(formData.mobile)) {
   newErrors.mobile = "Mobile must be 10 digits";
@@ -145,6 +150,9 @@ if (formData.dob > today) {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+
+  if (isSubmitting) return;
+setIsSubmitting(true);
 
   const validationErrors = validate();
   if (Object.keys(validationErrors).length > 0) {
