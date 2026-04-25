@@ -72,6 +72,11 @@ const handleChange = (e) => {
     newValue = value.replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
+  // ✅ Pincode: only numbers, max 6 digits
+if (name === "pincode") {
+  newValue = value.replace(/\D/g, "").slice(0, 6);
+}
+
   setFormData({
     ...formData,
     [name]: type === "checkbox" ? checked : newValue
@@ -312,8 +317,7 @@ const inputProps = (name) => ({
 
             <div className="field-group">
               <label htmlFor="pincode">Pin Code</label>
-              <input id="pincode" maxLength='6' placeholder="000000" {...inputProps("pincode")} />
-            </div>
+<input id="pincode"mtype="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>            </div>
           </div>
         </section>
 
