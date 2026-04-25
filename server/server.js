@@ -7,9 +7,16 @@ const ExcelJS = require("exceljs");
 
 const app = express();
 
+
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 app.use(cors({
-  origin: "https://your-frontend-url.onrender.com"
-}));app.use(express.json());
+  origin: "*",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+app.use(express.json());
 
 // MongoDB Atlas connection
 mongoose.connect(process.env.MONGO_URI)
@@ -104,5 +111,6 @@ app.get("/api/download-excel", async (req, res) => {
   }
 });
 
-const PORT =  5000;
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
