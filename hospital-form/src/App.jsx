@@ -77,9 +77,6 @@ const handleChange = (e) => {
   }
 
   // ✅ Pincode: only numbers, max 6 digits
-if (name === "pincode") {
-  newValue = value.replace(/\D/g, "").slice(0, 6);
-}
 
   setFormData({
     ...formData,
@@ -126,15 +123,13 @@ if (!formData.city.trim()) newErrors.city = "City is required";
 if (!formData.state) newErrors.state = "State is required";
 if (!formData.pincode) newErrors.pincode = "Pincode is required";
     // email validation
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
-    }
 
 
-    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) {
+if (!formData.pincode) {
+  newErrors.pincode = "Pincode is required";
+} else if (!/^\d{6}$/.test(formData.pincode)) {
   newErrors.pincode = "Pincode must be 6 digits";
 }
-
     // Mobile validation (10 digits)
 if (!/^\d{10}$/.test(formData.mobile)) {
   newErrors.mobile = "Mobile must be 10 digits";
@@ -151,10 +146,11 @@ if (formData.age && formData.age < 0) {
 }
 
 // Email validation (already good, keep it)
-if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+if (!formData.email.trim()) {
+  newErrors.email = "Email is required";
+} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
   newErrors.email = "Invalid email address";
 }
-
 if (formData.dob > today) {
   newErrors.dob = "Future date not allowed";
 }
@@ -371,7 +367,7 @@ const inputProps = (name) => ({
 {errors.state && <span className="error-text">{errors.state}</span>}            </div>
 
             <div className="field-group">
-              <label htmlFor="pincode">Pin Code</label>
+              <label htmlFor="pincode">Pin Code <span className="required">*</span></label>
 <input id="pincode" type="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>  
   {errors.pincode && <span className="error-text">{errors.pincode}</span>}
 
@@ -385,7 +381,7 @@ const inputProps = (name) => ({
           <div className="form-grid two-col">
             <div className="field-group">
               <label htmlFor="mobile">Mobile <span className="required">*</span></label>
-              <input id="mobile" maxLength='10' type="tel" placeholder="+91 98765 43210" {...inputProps("mobile")} />
+              <input id="mobile" maxLength='10' type="tel" placeholder="98765 43210" {...inputProps("mobile")} />
               {errors.mobile && <span className="error-text">{errors.mobile}</span>}
             </div>
             {/* <div className="field-group">
