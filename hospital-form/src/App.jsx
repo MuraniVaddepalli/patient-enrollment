@@ -1,8 +1,12 @@
 import { useState, useRef } from "react";
-import SignatureCanvas from "react-signature-canvas";
+import SignatureCanvasModule from "react-signature-canvas";
+import logo from "./assets/logo.png";
 import "./App.css";
-import logo from "../public/logo.png";
+const SignatureCanvas =
+  SignatureCanvasModule.default || SignatureCanvasModule;
 function App() {
+  console.log("SignatureCanvas:", typeof SignatureCanvas);
+  
   const sigRef = useRef();
   const today = new Date().toISOString().split("T")[0];
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -163,14 +167,17 @@ if (formData.dob > today) {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  setIsSubmitting(true);
 
   const validationErrors = validate();
+  console.log("Validation errors:", validationErrors);
+
   if (Object.keys(validationErrors).length > 0) {
     setErrors(validationErrors);
     setIsSubmitting(false);
     return;
   }
+    setIsSubmitting(true);
+
 
   const signature = sigRef.current
     .getTrimmedCanvas()
@@ -365,7 +372,10 @@ const inputProps = (name) => ({
 
             <div className="field-group">
               <label htmlFor="pincode">Pin Code</label>
-<input id="pincode" type="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>            </div>
+<input id="pincode" type="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>  
+  {errors.pincode && <span className="error-text">{errors.pincode}</span>}
+
+          </div>
           </div>
         </section>
 
@@ -383,7 +393,7 @@ const inputProps = (name) => ({
               <input id="alternateMobile" maxLength='10' type="tel" placeholder="+91 98765 43210" {...inputProps("alternateMobile")} />
             </div> */}
             <div className="field-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Email<span className="required">*</span></label>
               <input id="email" type="email" placeholder="patient@example.com" {...inputProps("email")} />
               {errors.email && <span className="error-text">{errors.email}</span>}
             </div>
