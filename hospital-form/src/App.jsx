@@ -12,14 +12,14 @@ function App() {
     gender: "",
     // genderOther: "",
     dob: "",
-    anniversary: "",
+    // anniversary: "",
     age: "",
     address: "",
     city: "",
     state: "",
     pincode: "",
     mobile: "",
-    alternateMobile: "",
+    // alternateMobile: "",
     email: "",
 
     purpose: "",
@@ -56,7 +56,7 @@ const handleChange = (e) => {
   let newValue = value;
 
   // ✅ Mobile validation (numbers only, max 10 digits)
-  if (name === "mobile" || name === "alternateMobile") {
+  if (name === "mobile" ) {
     newValue = value.replace(/\D/g, "").slice(0, 10);
   }
 
@@ -112,8 +112,15 @@ if (name === "pincode") {
       newErrors.referenceOther = "Please specify";
     if (!formData.consent) newErrors.consent = "Consent is required";
     if (!formData.date) newErrors.date = "Date is required";
-    if (sigRef.current && sigRef.current.isEmpty()) newErrors.signature = "Signature is required";
+const signatureCanvas = sigRef.current;
 
+if (!signatureCanvas || signatureCanvas.isEmpty()) {
+  newErrors.signature = "Signature is required";
+}    if (!formData.age) newErrors.age = "Age is required";
+if (!formData.address.trim()) newErrors.address = "Address is required";
+if (!formData.city.trim()) newErrors.city = "City is required";
+if (!formData.state) newErrors.state = "State is required";
+if (!formData.pincode) newErrors.pincode = "Pincode is required";
     // email validation
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "Invalid email address";
@@ -130,9 +137,9 @@ if (!/^\d{10}$/.test(formData.mobile)) {
 }
 
 // Alternate mobile (optional but if given must be valid)
-if (formData.alternateMobile && !/^\d{10}$/.test(formData.alternateMobile)) {
-  newErrors.alternateMobile = "Alternate mobile must be 10 digits";
-}
+// if (formData.alternateMobile && !/^\d{10}$/.test(formData.alternateMobile)) {
+//   newErrors.alternateMobile = "Alternate mobile must be 10 digits";
+// }
 
 // Age validation
 if (formData.age && formData.age < 0) {
@@ -156,19 +163,24 @@ if (formData.dob > today) {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  if (isSubmitting) return;
-setIsSubmitting(true);
+  setIsSubmitting(true);
 
   const validationErrors = validate();
   if (Object.keys(validationErrors).length > 0) {
     setErrors(validationErrors);
+    setIsSubmitting(false);
     return;
   }
 
-  const signature = sigRef.current.toDataURL();
+  const signature = sigRef.current
+    .getTrimmedCanvas()
+    .toDataURL("image/png", 0.5);
+
   const finalData = { ...formData, signature };
 
   try {
+    console.log("🚀 Calling API...");
+
     const response = await fetch("https://patient-enrollment.onrender.com/api/save-form", {
       method: "POST",
       headers: {
@@ -177,14 +189,15 @@ setIsSubmitting(true);
       body: JSON.stringify(finalData)
     });
 
+    console.log("📥 Response received");
+
     const result = await response.json();
 
-    // ✅ IMPORTANT FIX
     if (!response.ok) {
       throw new Error(result.error || "Something went wrong");
     }
+        console.log("Success:", result);
 
-    console.log("Success:", result);
 
     // RESET FORM
     setFormData({
@@ -193,14 +206,14 @@ setIsSubmitting(true);
       gender: "",
       // genderOther: "",
       dob: "",
-      anniversary: "",
+      // anniversary: "",
       age: "",
       address: "",
       city: "",
       state: "",
       pincode: "",
       mobile: "",
-      alternateMobile: "",
+      // alternateMobile: "",
       email: "",
       purpose: "",
       purposeOther: "",
@@ -243,7 +256,7 @@ const inputProps = (name) => ({
       <header className="form-header">
 <div className="logo-mark">
   <img src={logo} alt="Clinic Logo" />
-</div>        <h1>Sugar &amp; Heart Clinic</h1>
+</div>        <h1>Sugar &amp; Heart Clinic - Goregaon, Mumbai</h1>
         <p className="subtitle">Patient Enrollment Form</p>
       </header>
 
@@ -291,33 +304,68 @@ const inputProps = (name) => ({
             </div>
 
             <div className="field-group">
-              <label htmlFor="age">Age</label>
+              <label htmlFor="age">Age <span className="required">*</span></label>
               <input id="age" type="number" placeholder="Years" min="0" max="150" {...inputProps("age")} />
+                {errors.age && <span className="error-text">{errors.age}</span>}
             </div>
 
-            <div className="field-group">
+            {/* <div className="field-group">
               <label htmlFor="anniversary">Anniversary Date</label>
               <input id="anniversary" type="date" max={today} {...inputProps("anniversary")} />
-            </div>
+            </div> */}
 
             <div className="field-group full-width">
-              <label htmlFor="address">Address</label>
+              <label htmlFor="address">Address <span className="required">*</span></label>
               <input id="address" placeholder="Street address" {...inputProps("address")} />
+                {errors.address && <span className="error-text">{errors.address}</span>}
+
             </div>
 
             <div className="field-group">
-              <label htmlFor="city">City</label>
+              <label htmlFor="city">City <span className="required">*</span> </label>
               <input id="city" placeholder="City" {...inputProps("city")} />
+              {errors.city && <span className="error-text">{errors.city}</span>}
             </div>
 
             <div className="field-group">
-              <label htmlFor="state">State</label>
-              <input id="state" placeholder="State" {...inputProps("state")} />
-            </div>
+              <label htmlFor="state">State <span className="required">*</span></label>
+<select id="state" {...inputProps("state")}>
+  <option value="">Select State</option>
+  <option>Andhra Pradesh</option>
+  <option>Arunachal Pradesh</option>
+  <option>Assam</option>
+  <option>Bihar</option>
+  <option>Chhattisgarh</option>
+  <option>Goa</option>
+  <option>Gujarat</option>
+  <option>Haryana</option>
+  <option>Himachal Pradesh</option>
+  <option>Jharkhand</option>
+  <option>Karnataka</option>
+  <option>Kerala</option>
+  <option>Madhya Pradesh</option>
+  <option>Maharashtra</option>
+  <option>Manipur</option>
+  <option>Meghalaya</option>
+  <option>Mizoram</option>
+  <option>Nagaland</option>
+  <option>Odisha</option>
+  <option>Punjab</option>
+  <option>Rajasthan</option>
+  <option>Sikkim</option>
+  <option>Tamil Nadu</option>
+  <option>Telangana</option>
+  <option>Tripura</option>
+  <option>Uttar Pradesh</option>
+  <option>Uttarakhand</option>
+  <option>West Bengal</option>
+</select>
+
+{errors.state && <span className="error-text">{errors.state}</span>}            </div>
 
             <div className="field-group">
               <label htmlFor="pincode">Pin Code</label>
-<input id="pincode"mtype="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>            </div>
+<input id="pincode" type="text" inputMode="numeric" placeholder="000000" {...inputProps("pincode")}/>            </div>
           </div>
         </section>
 
@@ -330,10 +378,10 @@ const inputProps = (name) => ({
               <input id="mobile" maxLength='10' type="tel" placeholder="+91 98765 43210" {...inputProps("mobile")} />
               {errors.mobile && <span className="error-text">{errors.mobile}</span>}
             </div>
-            <div className="field-group">
+            {/* <div className="field-group">
               <label htmlFor="alternateMobile">Alternate Mobile</label>
               <input id="alternateMobile" maxLength='10' type="tel" placeholder="+91 98765 43210" {...inputProps("alternateMobile")} />
-            </div>
+            </div> */}
             <div className="field-group">
               <label htmlFor="email">Email</label>
               <input id="email" type="email" placeholder="patient@example.com" {...inputProps("email")} />
@@ -344,10 +392,10 @@ const inputProps = (name) => ({
 
         {/* Purpose of Visit */}
         <section className="form-section">
-          <h3>Purpose of Visit</h3>
+          <h3>Primary Condition for Consultation</h3>
           <div className="form-grid two-col">
             <div className="field-group">
-              <label htmlFor="purpose">Purpose of Visit <span className="required">*</span></label>
+              <label htmlFor="purpose">Primary Condition for Consultation <span className="required">*</span></label>
               <select id="purpose" {...inputProps("purpose")}>
                 <option value="">Select</option>
                 <option value="Diabetes">Diabetes</option>
@@ -483,6 +531,9 @@ const inputProps = (name) => ({
                 ref={sigRef}
                 penColor="#1e293b"
                 canvasProps={{ className: "sigCanvas" }}
+                onEnd={() => {
+    setErrors((prev) => ({ ...prev, signature: "" }));
+  }}
               />
               <button type="button" className="clear-sig" onClick={() => sigRef.current.clear()}>
                 Clear Signature

@@ -1,13 +1,13 @@
 /* ===== Teal Theme ===== */
 :root {
-  --primary: #14b8a6;
-  --primary-dark: #0d9488;
+  --primary: #00d6d6;
+  --primary-dark: #00d6d6;
   --primary-light: #f0fdfa;
-  --accent: #2dd4bf;
+  --accent: #00d6d6;
   --text: #1e293b;
-  --text-secondary: #64748b;
+  --text-secondary: #1d395b;
   --border: #99f6e4;
-  --border-focus: #5eead4;
+  --border-focus: #00d6d6;
   --bg: #f8fafc;
   --card: #ffffff;
   --radius: 12px;
@@ -17,15 +17,13 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
+font-family: 'Montserrat Alternates', sans-serif;  background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto Flex', sans-serif;
 }
 
 .logo-mark {
@@ -176,8 +174,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: var(--transition);
-  font-family: inherit;
-}
+ font-family: 'Montserrat Alternates', sans-serif;}
 
 .field-group input::placeholder {
   color: #94a3b8;
