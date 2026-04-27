@@ -259,7 +259,7 @@ const inputProps = (name) => ({
       <header className="form-header">
 <div className="logo-mark">
   <img src={logo} alt="Clinic Logo" />
-</div>        <h1>Sugar &amp; Heart Clinic - Goregaon, Mumbai</h1>
+</div>        <h1>Sugar &amp; Heart Clinic - Goregaon,Mumbai</h1>
         <p className="subtitle">Patient Enrollment Form</p>
       </header>
 
