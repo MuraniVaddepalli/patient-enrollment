@@ -76,8 +76,12 @@ app.get("/api/get-data", async (req, res) => {
   }
 });
 
-const GOOGLE_URL =
-  "https://script.google.com/macros/s/AKfycbzV4wY8XSO_K9-wK8umpoG25_JRWQ20_z322hwG-wi2f7pBMk4IfQd-ePPZcA-FNPhl/exec";
+// app.get("/api/health", (req, res) => {
+//   res.send("OK");
+// });
+
+
+const GOOGLE_URL = "https://script.google.com/macros/s/AKfycbzV4wY8XSO_K9-wK8umpoG25_JRWQ20_z322hwG-wi2f7pBMk4IfQd-ePPZcA-FNPhl/exec";
 
 async function syncToGoogle() {
   try {
